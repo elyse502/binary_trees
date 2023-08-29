@@ -1158,6 +1158,350 @@ alex@/tmp/binary_trees$ valgrind ./101-lvl
 ==23445== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
 alex@/tmp/binary_trees$
 ```
+## 21. Is complete: [102-binary_tree_is_complete.c](102-binary_tree_is_complete.c)
+A function that checks if a binary tree is complete
+* Prototype: `int binary_tree_is_complete(const binary_tree_t *tree);`
+* Where `tree` is a pointer to the root node of the tree to check
+* If `tree` is `NULL`, your function must return `0`
+```
+alex@/tmp/binary_trees$ cat 102-main.c
+#include <stdlib.h>
+#include <stdio.h>
+#include "binary_trees.h"
+
+/**
+ * main - Entry point
+ *
+ * Return: Always 0 (Success)
+ */
+int main(void)
+{
+    binary_tree_t *root;
+    int complete;
+
+    root = binary_tree_node(NULL, 98);
+    root->left = binary_tree_node(root, 12);
+    root->right = binary_tree_node(root, 128);
+    root->left->right = binary_tree_node(root->left, 54);
+    root->right->right = binary_tree_node(root, 402);
+    root->left->left = binary_tree_node(root->left, 10);
+
+    binary_tree_print(root);
+    complete = binary_tree_is_complete(root);
+    printf("Is %d complete: %d\n", root->n, complete);
+    complete = binary_tree_is_complete(root->left);
+    printf("Is %d complete: %d\n", root->left->n, complete);
+
+    root->right->left = binary_tree_node(root->right, 112);
+    binary_tree_print(root);
+    complete = binary_tree_is_complete(root);
+    printf("Is %d complete: %d\n", root->n, complete);
+
+    root->left->left->left = binary_tree_node(root->left->left, 8);
+    binary_tree_print(root);
+    complete = binary_tree_is_complete(root);
+    printf("Is %d complete: %d\n", root->n, complete);
+
+    root->left->right->left = binary_tree_node(root->left->right, 23);
+    binary_tree_print(root);
+    complete = binary_tree_is_complete(root);
+    printf("Is %d complete: %d\n", root->n, complete);
+
+    binary_tree_delete(root);
+    return (0);
+}
+alex@/tmp/binary_trees$ gcc -Wall -Wextra -Werror -pedantic binary_tree_print.c 102-main.c 102-binary_tree_is_complete.c 0-binary_tree_node.c 3-binary_tree_delete.c -o 102-complete
+alex@/tmp/binary_trees$ ./102-complete
+       .-------(098)--.
+  .--(012)--.       (128)--.
+(010)     (054)          (402)
+Is 98 complete: 0
+Is 12 complete: 1
+       .-------(098)-------.
+  .--(012)--.         .--(128)--.
+(010)     (054)     (112)     (402)
+Is 98 complete: 1
+            .-------(098)-------.
+       .--(012)--.         .--(128)--.
+  .--(010)     (054)     (112)     (402)
+(008)
+Is 98 complete: 1
+            .------------(098)-------.
+       .--(012)-------.         .--(128)--.
+  .--(010)       .--(054)     (112)     (402)
+(008)          (023)
+Is 98 complete: 0
+alex@/tmp/binary_trees$
+```
+## 22. Rotate left: [103-binary_tree_rotate_left.c](103-binary_tree_rotate_left.c)
+A function that performs a left-rotation on a binary tree
+* Prototype: `binary_tree_t *binary_tree_rotate_left(binary_tree_t *tree);`
+* Where `tree` is a pointer to the root node of the tree to rotate
+* Your function must return a pointer to the new root node of the tree once rotated
+```
+alex@/tmp/binary_trees$ cat 103-main.c
+#include <stdlib.h>
+#include <stdio.h>
+#include "binary_trees.h"
+
+/**
+ * main - Entry point
+ *
+ * Return: 0 on success, error code on failure
+ */
+int main(void)
+{
+    binary_tree_t *root;
+
+    root = binary_tree_node(NULL, 98);
+    root->right = binary_tree_node(root, 128);
+    root->right->right = binary_tree_node(root->right, 402);
+    binary_tree_print(root);
+    printf("Rotate-left %d\n", root->n);
+    root = binary_tree_rotate_left(root);
+    binary_tree_print(root);
+    printf("\n");
+
+    root->right->right = binary_tree_node(root->right, 450);
+    root->right->left = binary_tree_node(root->right, 420);
+    binary_tree_print(root);
+    printf("Rotate-left %d\n", root->n);
+    root = binary_tree_rotate_left(root);
+    binary_tree_print(root);
+    return (0);
+}
+alex@/tmp/binary_trees$ gcc -Wall -Wextra -Werror -pedantic binary_tree_print.c 103-binary_tree_rotate_left.c 103-main.c 0-binary_tree_node.c -o 103-rotl
+alex@/tmp/binary_trees$ ./103-rotl
+(098)--.
+     (128)--.
+          (402)
+Rotate-left 98
+  .--(128)--.
+(098)     (402)
+
+  .--(128)-------.
+(098)       .--(402)--.
+          (420)     (450)
+Rotate-left 128
+       .-------(402)--.
+  .--(128)--.       (450)
+(098)     (420)
+alex@/tmp/binary_trees$
+```
+## 23. Rotate right: [104-binary_tree_rotate_right.c](104-binary_tree_rotate_right.c)
+A function that performs a right-rotation on a binary tree
+* Prototype: `binary_tree_t *binary_tree_rotate_right(binary_tree_t *tree);`
+* Where `tree` is a pointer to the root node of the tree to rotate
+* Your function must return a pointer to the new root node of the tree once rotated
+```
+alex@/tmp/binary_trees$ cat 104-main.c
+#include <stdlib.h>
+#include <stdio.h>
+#include "binary_trees.h"
+
+/**
+ * main - Entry point
+ *
+ * Return: 0 on success, error code on failure
+ */
+int main(void)
+{
+    binary_tree_t *root;
+
+    root = binary_tree_node(NULL, 98);
+    root->left = binary_tree_node(root, 64);
+    root->left->left = binary_tree_node(root->left, 32);
+    binary_tree_print(root);
+    printf("Rotate-right %d\n", root->n);
+    root = binary_tree_rotate_right(root);
+    binary_tree_print(root);
+    printf("\n");
+
+    root->left->left = binary_tree_node(root->left, 20);
+    root->left->right = binary_tree_node(root->left, 56);
+    binary_tree_print(root);
+    printf("Rotate-right %d\n", root->n);
+    root = binary_tree_rotate_right(root);
+    binary_tree_print(root);
+    return (0);
+}
+alex@/tmp/binary_trees$ gcc -Wall -Wextra -Werror -pedantic binary_tree_print.c 104-binary_tree_rotate_right.c 104-main.c 0-binary_tree_node.c -o 104-rotr
+alex@/tmp/binary_trees$ ./104-rotr
+       .--(098)
+  .--(064)
+(032)
+Rotate-right 98
+  .--(064)--.
+(032)     (098)
+
+       .-------(064)--.
+  .--(032)--.       (098)
+(020)     (056)
+Rotate-right 64
+  .--(032)-------.
+(020)       .--(064)--.
+          (056)     (098)
+alex@/tmp/binary_trees$
+```
+## 24. Is BST: [ 110-binary_tree_is_bst.c]( 110-binary_tree_is_bst.c)
+A function that checks if a binary tree is a valid [Binary Search Tree](https://en.wikipedia.org/wiki/Binary_search_tree)
+* Prototype: `int binary_tree_is_bst(const binary_tree_t *tree);`
+* Where `tree` is a pointer to the root node of the tree to check
+* Your function must return `1` if `tree` is a valid BST, and `0` otherwise
+* If `tree` is `NULL`, return `0`
+
+Properties of a Binary Search Tree:
+* The left subtree of a node contains only nodes with values less than the node’s value
+* The right subtree of a node contains only nodes with values greater than the node’s value
+* The left and right subtree each must also be a binary search tree
+* There must be no duplicate values
+```
+alex@/tmp/binary_trees$ cat 110-main.c
+#include <stdlib.h>
+#include <stdio.h>
+#include "binary_trees.h"
+
+/**
+ * main - Entry point
+ *
+ * Return: Always 0 (Success)
+ */
+int main(void)
+{
+    binary_tree_t *root;
+    int bst;
+
+    root = binary_tree_node(NULL, 98);
+    root->left = binary_tree_node(root, 12);
+    root->right = binary_tree_node(root, 128);
+    root->left->right = binary_tree_node(root->left, 54);
+    root->right->right = binary_tree_node(root, 402);
+    root->left->left = binary_tree_node(root->left, 10);
+
+    binary_tree_print(root);
+    bst = binary_tree_is_bst(root);
+    printf("Is %d bst: %d\n", root->n, bst);
+    bst = binary_tree_is_bst(root->left);
+    printf("Is %d bst: %d\n", root->left->n, bst);
+
+    root->right->left = binary_tree_node(root->right, 97);
+    binary_tree_print(root);
+    bst = binary_tree_is_bst(root);
+    printf("Is %d bst: %d\n", root->n, bst);
+    return (0);
+}
+alex@/tmp/binary_trees$ gcc -Wall -Wextra -Werror -pedantic binary_tree_print.c 110-main.c 110-binary_tree_is_bst.c 0-binary_tree_node.c -o 110-is_bst
+alex@/tmp/binary_trees$ ./110-is_bst
+       .-------(098)--.
+  .--(012)--.       (128)--.
+(010)     (054)          (402)
+Is 98 bst: 1
+Is 12 bst: 1
+       .-------(098)-------.
+  .--(012)--.         .--(128)--.
+(010)     (054)     (097)     (402)
+Is 98 bst: 0
+alex@/tmp/binary_trees$
+```
+## 25. BST - Insert: [111-bst_insert.c](111-bst_insert.c), [0-binary_tree_node.c](0-binary_tree_node.c)
+A function that inserts a value in a Binary Search Tree
+* Prototype: `bst_t *bst_insert(bst_t **tree, int value);`
+* Where `tree` is a double pointer to the root node of the BST to insert the value
+* And `value` is the value to store in the node to be inserted
+* Your function must return a pointer to the created node, or `NULL` on failure
+* If the address stored in `tree` is `NULL`, the created node must become the root node.
+* If the value is already present in the `tree`, it must be ignored
+
+Your file `0-binary_tree_node.c` will be compile during the correction
+```
+alex@/tmp/binary_trees$ cat 111-main.c
+#include <stdlib.h>
+#include <stdio.h>
+#include "binary_trees.h"
+
+/**
+ * main - Entry point
+ *
+ * Return: Always 0 (Success)
+ */
+int main(void)
+{
+    bst_t *root;
+    bst_t *node;
+
+    root = NULL;
+    node = bst_insert(&root, 98);
+    printf("Inserted: %d\n", node->n);
+    node = bst_insert(&root, 402);
+    printf("Inserted: %d\n", node->n);
+    node = bst_insert(&root, 12);
+    printf("Inserted: %d\n", node->n);
+    node = bst_insert(&root, 46);
+    printf("Inserted: %d\n", node->n);
+    node = bst_insert(&root, 128);
+    printf("Inserted: %d\n", node->n);
+    node = bst_insert(&root, 256);
+    printf("Inserted: %d\n", node->n);
+    node = bst_insert(&root, 512);
+    printf("Inserted: %d\n", node->n);
+    node = bst_insert(&root, 1);
+    printf("Inserted: %d\n", node->n);
+    node = bst_insert(&root, 128);
+    printf("Node should be nil -> %p\n", (void *)node);
+    binary_tree_print(root);
+    return (0);
+}
+alex@/tmp/binary_trees$ gcc -Wall -Wextra -Werror -pedantic binary_tree_print.c 111-bst_insert.c 111-main.c 0-binary_tree_node.c -o 111-bst_insert
+alex@/tmp/binary_trees$ ./111-bst_insert
+Inserted: 98
+Inserted: 402
+Inserted: 12
+Inserted: 46
+Inserted: 128
+Inserted: 256
+Inserted: 512
+Inserted: 1
+Node should be nil -> (nil)
+       .-------(098)------------.
+  .--(012)--.         .-------(402)--.
+(001)     (046)     (128)--.       (512)
+                         (256)
+alex@/tmp/binary_trees$
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
