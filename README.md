@@ -11,6 +11,9 @@ Search Operation: To perform a search for an element in a tree, start from the r
 
 Preorder Traversal: This type of traversal method is a situation whereby the root node is visited first, then the left subtree or node and finally to the right subtree or node.
 
+Inorder Operation: This type of traversal method is a situation whereby the left subtree or node is visited first, then the root node and finally the right subtree or node.
+
+Postorder Operation: This type of traversal method is a situation whereby the left subtree or node is visited first, then the right subtree or node and finally the root.
 
 # Resources🏗
 ### Read or watch:
@@ -64,6 +67,4 @@ Preorder Traversal: This type of traversal method is a situation whereby the roo
 
 
 
-Inorder Operation: This type of traversal method is a situation whereby the left subtree or node is visited first, then the root node and finally the right subtree or node.
 
-Postorder Operation: This type of traversal method is a situation whereby the left subtree or node is visited first, then the right subtree or node and finally the root.
